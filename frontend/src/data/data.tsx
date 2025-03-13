@@ -1,6 +1,6 @@
-import { EntryProps } from "../App";
 
-const data : EntryProps[] = [
+
+const data = [
     {
         id: 1,
         img: {
