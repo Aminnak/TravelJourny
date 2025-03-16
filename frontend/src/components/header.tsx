@@ -1,9 +1,9 @@
 
-import { useNavigate } from 'react-router-dom'
-import DateCard from '../cards/DateCard'
-import ListItem from '../cards/ListItem'
-import LocationCard from '../cards/LocationCard'
-import UserCard from '../cards/UserCard'
+// import { useNavigate } from 'react-router-dom'
+import DateCard from '../iconCards/DateCard'
+import ListItem from '../simplifiedCode/ListItem'
+import LocationCard from '../iconCards/LocationCard'
+import UserCard from '../iconCards/UserCard'
 import Nav from './Nav'
 
 const Header = () => {

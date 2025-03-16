@@ -1,6 +1,6 @@
 // Pic , country , publisher , title , description , date posted , likes ,publisher profile
-import Data from '../cards/Data'
-import UserJourney from './UserJourney'
+import Data from '../data/Data'
+import UserJourney from './UserJourneyTemplate'
 
 const Journey = () => {
     const RobotoFont = {
@@ -18,6 +18,7 @@ const Journey = () => {
             journeyLocation={data.journeyLocation}
             journeyImage={data.journeyImage}
             journeyDescription={data.journeyDescription}
+            googleMapsLink={data.googleMapsLink}
 
         />
     ))
