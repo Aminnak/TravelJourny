@@ -12,7 +12,7 @@ const Signup = () => {
         RobotoFont : {fontFamily: "Roboto, sans-serif"},
         ShigaBrushFont : {fontFamily: 'Shiga Brush, sans-serif'}
     }
-    const pageLogic = {
+    const pageTexts = {
         buttonText : PathnameStatus ? 'Sign up' : 'Login',
         titleText : PathnameStatus ? `Welcome to Journey.com - Let's create your account for free` :
         `Welcome to Journey.com - Let's log you in and explore together`,
@@ -41,7 +41,7 @@ const Signup = () => {
                 <div className="flex flex-col space-y-0.5 border-b border-b-gray-300/80 pb-8">
                     <h2 className="text-xl font-bold">Get started</h2>
                     <div className="flex justify-between">
-                        <h3 className="text-gray-500/60">{pageLogic.titleText}</h3>
+                        <h3 className="text-gray-500/60">{pageTexts.titleText}</h3>
                         <a onClick={() => Navigator('/home')} className="w-[25px] h-[25px] max-md:hidden"><HomeCard color='#022f2e'/></a>
                     </div>
                 </div>
@@ -58,8 +58,8 @@ const Signup = () => {
                         <input type="password" className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder={'\u2022'.repeat(6)}/>
                     </div>
                     <div className="flex flex-col justify-center text-center">
-                        <button type="submit" className="w-full py-3 px-4 font-bold rounded-md bg-teal-950 text-slate-100">{pageLogic.buttonText}</button>
-                        <p className="mt-4">{pageLogic.routerGuide.firstText}<span className="font-semibold text-teal-950 hover:cursor-pointer" onClick={() => Navigator(PathnameStatus ? '/login' : '/sign-up')}> {pageLogic.routerGuide.secondText}</span></p>
+                        <button type="submit" className="w-full py-3 px-4 font-bold rounded-md bg-teal-950 text-slate-100">{pageTexts.buttonText}</button>
+                        <p className="mt-4">{pageTexts.routerGuide.firstText}<span className="font-semibold text-teal-950 hover:cursor-pointer" onClick={() => Navigator(PathnameStatus ? '/login' : '/sign-up')}> {pageTexts.routerGuide.secondText}</span></p>
                     </div>
                 </form>
             </div>
