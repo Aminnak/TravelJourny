@@ -1,15 +1,22 @@
+import { useRef } from "react"
 import { DataInterface } from "../data/Data"
 import FullscreenCard from "../iconCards/FullscreenCard"
 import GoogleMapLocationCard from "../iconCards/GoogleMapLocationCard"
 
 const UserJourney : React.FC<DataInterface> = ({userProfile , userName , publishedDate ,journeyTitle ,journeyDescription,journeyImage,journeyLocation,googleMapsLink}) => {
+    const imgRef = useRef<HTMLImageElement>(null)
 
+    const openFullscreen = () => {
+        if(imgRef.current?.requestFullscreen){
+            imgRef.current.requestFullscreen()
+        }
+    }
   return (
     <div className="flex flex-col space-y-6 px-6 pb-10 border-b border-b-gray-300 my-5 mx-4">
         <div className="flex flex-col lg:flex-row max-lg:space-y-6 lg:space-x-6">
             <div className="relative overflow-hidden lg:w-5/12 rounded group">
-                <img src={journeyImage} alt="journey picture" className="rounded h-auto lg:h-[350px] object-cover hover:scale-102 hover:cursor-pointer w-full duration-300" />
-                <span className="opacity-0 scale-95 duration-300 w-[25px] h-[25px] absolute group-hover:opacity-100 group-hover:scale-100 right-3 bottom-3"><FullscreenCard /></span>
+                <img ref={imgRef} src={journeyImage} alt="journey picture" className="rounded h-auto lg:h-[350px] object-cover hover:scale-102 hover:cursor-pointer w-full duration-300" />
+                <span onClick={() => openFullscreen()} className="opacity-0 scale-95 duration-300 w-[25px] h-[25px] hover:cursor-pointer absolute group-hover:opacity-100 group-hover:scale-100 right-3 bottom-3"><FullscreenCard /></span>
             </div>
             <div className="flex flex-col justify-between text-left lg:w-7/12 space-y-5">
                 <div>
