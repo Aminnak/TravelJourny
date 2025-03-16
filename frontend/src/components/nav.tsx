@@ -1,7 +1,13 @@
-import EarthSvg from "../cards/EarthCard"
-import SearchCard from "../cards/SearchCard"
+import { useNavigate } from "react-router-dom"
+import EarthSvg from "../iconCards/EarthCard"
+import SearchCard from "../iconCards/SearchCard"
 
 const Nav = () => {
+    const Navigate = useNavigate()
+
+    const Navigator = (route : string) => {
+        Navigate(route)
+    }
     // creating the list items in navbar dinamically
     const NavListItemTitles = ['Hotel','Flight','Train','Travel','Car Rental']
     const NavListItems = NavListItemTitles.map((title ,index)=> (
@@ -45,10 +51,10 @@ const Nav = () => {
         </div>
         {/*  third part: login and sign up buttons */}
         <div className="flex space-x-6">
-            <button className="font-medium text-lg">
+            <button onClick={() => Navigator('/login')} className="font-medium text-lg hover:cursor-pointer">
                 Log In
             </button>
-            <button className="bg-gray-100 text-black rounded-md py-1.5 px-3 font-medium">
+            <button onClick={() => Navigator('/sign-up')} className="bg-gray-100 text-black rounded-md py-1.5 px-3 font-medium hover:cursor-pointer">
                 Sign Up
             </button>
         </div>

@@ -1,36 +1,38 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import EarthSvgCard from "../cards/EarthCard"
+import EarthSvgCard from "../iconCards/EarthCard"
+import HomeCard from "../iconCards/HomeCard"
 import wayToHeaven  from "../assets/images/wayToHeaven.jpg"
-import HomeCard from "../cards/HomeCard"
 
 const Signup = () => {
-    const location = useLocation()
-    const navigate = useNavigate()
-    const pathnameStatus = location.pathname === '/sign-up' ? true : false // if the route is at sign up then true if at login then flase
+    const Location = useLocation()
+    const Navigate = useNavigate()
+    const PathnameStatus = Location.pathname === '/sign-up' ? true : false // if the route is at sign up then true if at login then flase
 
-    const RobotoFont = {fontFamily: "Roboto, sans-serif"}
-    const Italic = {fontFamily: 'Shiga Brush, sans-serif'}
+    const Fonts = {
+        RobotoFont : {fontFamily: "Roboto, sans-serif"},
+        ShigaBrushFont : {fontFamily: 'Shiga Brush, sans-serif'}
+    }
     const pageLogic = {
-        buttonText : pathnameStatus ? 'Sign up' : 'Login',
-        titleText : pathnameStatus ? `Welcome to Journey.com - Let's create your account for free` :
+        buttonText : PathnameStatus ? 'Sign up' : 'Login',
+        titleText : PathnameStatus ? `Welcome to Journey.com - Let's create your account for free` :
         `Welcome to Journey.com - Let's log you in and explore together`,
         routerGuide : {
-            firstText : pathnameStatus ? "Don't you have an account?" : 'Already have an account?',
-            secondText : pathnameStatus ? 'Log in' : 'Sign up'
+            firstText : PathnameStatus ? "Don't you have an account?" : 'Already have an account?',
+            secondText : PathnameStatus ? 'Log in' : 'Sign up'
         }
     }
 
-    let navigateRoute = (route : string) => {
-        navigate(route)
+    const Navigator = (route : string) => {
+        Navigate(route)
     }
 
   return (
 
     <>
     <div className="md:hidden flex justify-center py-4 px-5 text-white ">
-        <a  onClick={() => navigateRoute('/home')} className="w-[30px] h-[30px]"><HomeCard color='#022f2e'/></a>
+        <a  onClick={() => Navigator('/home')} className="w-[30px] h-[30px]"><HomeCard color='#022f2e'/></a>
     </div>
-    <section className="flex space-x-3 h-screen "  style={RobotoFont}>
+    <section className="flex space-x-3 h-screen "  style={Fonts.RobotoFont}>
         <div className="flex flex-col justify-center items-center lg:w-5/9 w-full rounded-lg ">
             <div className="w-[600px] max-sm:w-[450px] rounded-md ">
                 <div className="flex w-full mb-6">
@@ -63,7 +65,7 @@ const Signup = () => {
             </div>
         </div>
         <div className="w-4/9 justify-center  bg-cover bg-center hidden lg:flex" style={{backgroundImage : `url(${wayToHeaven})`}}>
-            <div className="flex flex-col w-full py-8 px-12 space-y-6" style={Italic}>
+            <div className="flex flex-col w-full py-8 px-12 space-y-6" style={Fonts.ShigaBrushFont}>
                 <h2 className="text-5xl italic text-teal-950 max-w-[350px]">Share your amazing travel stories with us</h2>
                 <div className="flex justify-center w-full text-5xl text-teal-950 max-w-[400px] pl-24">
                     <h2>we're glad to read them</h2>

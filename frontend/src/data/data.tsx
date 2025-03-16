@@ -1,42 +1,72 @@
+export interface DataInterface {
+    id: number;
+    userProfile : string;
+    userName : string;
+    publishedDate : string;
+    journeyTitle : string;
+    journeyLocation : string;
+    journeyDescription : string;
+    journeyImage : string;
+    googleMapsLink : string ;
+}
 
-
-const data = [
+const Data : Array<DataInterface> = [
     {
         id: 1,
-        img: {
-            src: "https://scrimba.com/links/travel-journal-japan-image-url",
-            alt: "Mount Fuji"
-        },
-        title: "Mount Fuji",
-        country: "Japan",
-        googleMapsLink: "https://maps.app.goo.gl/6RLYZDuuuqJ7kNGZ9",
-        dates: "12 Jan, 2021 - 24 Jan, 2021",
-        text: "Mount Fuji is the tallest mountain in Japan, standing at 3,776 meters (12,380 feet). Mount Fuji is the single most popular tourist site in Japan, for both Japanese and foreign tourists."
+        userProfile : '/favProfile.jpg',
+        userName : 'aminnak',
+        publishedDate : '15 years ago',
+        journeyTitle : 'my beloving Germany Tour',
+        journeyLocation : 'Neuschwanstein Castle, Germany',
+        journeyImage : '/sample.jpg',
+        googleMapsLink: "https://maps.app.goo.gl/Zr17SCrsJeCEKMd36",
+        journeyDescription : `
+                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi dolore odio sapiente
+                                    quam saepe, vero neque autem provident incidunt voluptas soluta porro error sunt ullam
+                                    odit officia magni cupiditate ut! Magni enim unde aperiam error ducimus officiis tempori
+                                    bus tempora quo blanditiis eligendi voluptatum nisi cumque, sint ipsa qui fuga! Voluptatum
+                                    iusto doloribus consequuntur corrupti sapiente fugit perferendis obcaecati. Placeat tenetur
+                                    magni non nulla dolorum iure exercitationem similique provident quae iusto.
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, provident?
+                                    Cum quis, id numquam rerum assumenda obcaecati commodi officiis ab voluptatibus dolorem mollitia.
+                                    Exercitationem minima facilis repellat architecto quod sapiente iure vitae quidem eveniet pariatur
+                                    excepturi explicabo iusto sit soluta labore optio et, laudantium, similique quasi rem neque tempore.
+                                    Non mollitia, quaerat quae sapiente tempore deleniti consectetur quam inventore, ex cumque atque
+                                    architecto veniam sequi explicabo saepe error iste numquam?
+        `,
+
     },
     {
         id: 2,
-        img: {
-            src: "https://scrimba.com/links/travel-journal-australia-image-url",
-            alt: "Sydney Opera House"
-        },
-        title: "Sydney Opera House",
-        country: "Australia",
+        userProfile : '/favProfile.jpg',
+        userName : 'Fiona',
+        publishedDate : '2 years ago',
+        journeyTitle : "Hallstatt: Austria's Hidden Gem",
+        journeyLocation : 'Hallstatt, Austria 🇦🇹',
+        journeyImage : '/sample2.jpg',
         googleMapsLink: "https://maps.app.goo.gl/Zr17SCrsJeCEKMd36",
-        dates: "27 May, 2021 - 8 Jun, 2021",
-        text: "The Sydney Opera House is a multi-venue performing arts centre in Sydney. Located on the banks of the Sydney Harbour, it is often regarded as one of the 20th century's most famous and distinctive buildings."
-    },
-    {
-        id: 3,
-        img: {
-            src: "https://scrimba.com/links/travel-journal-norway-image-url",
-            alt: "Geirangerfjord"
-        },
-        title: "Geirangerfjord",
-        country: "Norway",
-        googleMapsLink: "https://maps.app.goo.gl/fhkJuBhmFDv47tiB7",
-        dates: "01 Oct, 2021 - 18 Nov, 2021",
-        text: "The Geiranger Fjord is a fjord in the Sunnmøre region of Møre og Romsdal county, Norway. It is located entirely in the Stranda Municipality."
-    },
-]
+        journeyDescription : `vero neque autem provident incidunt voluptas soluta porro error sunt ullam
+                                    odit officia magni cupiditate ut! Magni enim unde aperiam error ducimus officiis tempori
+                                    bus tempora quo blanditiis eligendi voluptatum nisi cumque, sint ipsa qui fuga! Voluptatum
+                                    iusto doloribus consequuntur corrupti sapiente fugit perferendis obcaecati. Placeat tenetur
+                                    magni non nulla dolorum iure exercitationem similique provident quae iusto.
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugiat, provident?
+                                    Cum quis, id numquam rerum assumenda obcaecati commodi officiis ab voluptatibus dolorem mollitia.
+                                    Exercitationem minima facilis repellat architecto quod sapiente iure vitae quidem eveniet pariatur
+                                    excepturi explicabo iusto sit soluta labore optio et
+        `,
 
-export default data
+    },
+    // {
+    //     id: 3,
+    //     userProfile : '',
+    //     userName : '',
+    //     publishedDate : '',
+    //     journeyTitle : '',
+    //     journeyLocation : '',
+    //     journeyDescription : '',
+    //     journeyImage : '',
+
+    // }
+];
+export default Data;
