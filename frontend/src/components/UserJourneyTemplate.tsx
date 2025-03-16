@@ -2,8 +2,9 @@ import { useRef } from "react"
 import { DataInterface } from "../data/Data"
 import FullscreenCard from "../iconCards/FullscreenCard"
 import GoogleMapLocationCard from "../iconCards/GoogleMapLocationCard"
+import { Link } from "react-router-dom"
 
-const UserJourney : React.FC<DataInterface> = ({userProfile , userName , publishedDate ,journeyTitle ,journeyDescription,journeyImage,journeyLocation,googleMapsLink}) => {
+const UserJourney : React.FC<DataInterface> = ({id,userProfile , userName , publishedDate ,journeyTitle ,journeyDescription,journeyImage,journeyLocation,googleMapsLink}) => {
     const imgRef = useRef<HTMLImageElement>(null)
 
     const openFullscreen = () => {
@@ -37,13 +38,15 @@ const UserJourney : React.FC<DataInterface> = ({userProfile , userName , publish
                             </div>
                         </div>
                     </div>
-                    <p className="lg:line-clamp-7 line-clamp-10">
+                    <p className="lg:line-clamp-7 line-clamp-10 font-medium">
                         {journeyDescription}
                     </p>
                 </div>
                 <div className="flex justify-end md:justify-between">
                     <a href={googleMapsLink} target="_blank" className="flex items-end"><span className="mr-1 w-[30px] h-[30px]"><GoogleMapLocationCard /></span><span className="text-gray-500/90 hover:text-gray-500/60 duration-300 hover:cursor-pointer underline text-sm">View on Google Maps</span></a>
-                    <button className="px-7 py-1.5 rounded-full bg-black text-white max-md:w-full hover:cursor-pointer focus:scale-105 duration-300">More</button>
+                    <Link to={`/journey/${id}`}>
+                        <button className="px-7 py-1.5 rounded-full bg-black text-white max-md:w-full hover:cursor-pointer focus:scale-105 duration-300">More</button>
+                    </Link>
                 </div>
             </div>
         </div>
