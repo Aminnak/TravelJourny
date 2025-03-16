@@ -1,4 +1,5 @@
-// import valley from '../assets/images/valley.jpg'
+
+import { useNavigate } from 'react-router-dom'
 import DateCard from '../cards/DateCard'
 import ListItem from '../cards/ListItem'
 import LocationCard from '../cards/LocationCard'
@@ -6,10 +7,12 @@ import UserCard from '../cards/UserCard'
 import Nav from './Nav'
 
 const Header = () => {
-    const RobotoFont = {
-        fontFamily: "Roboto, sans-serif",
-    }
+    const RobotoFont = {fontFamily: "Roboto, sans-serif", }
+    // const Navigate = useNavigate()
 
+    // const navigator = (route : string) => {
+    //     Navigate(route)
+    // }
   return (
 
         <header className="flex flex-col justify-between items-start w-full rounded" >

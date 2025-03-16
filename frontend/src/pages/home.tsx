@@ -5,7 +5,7 @@ import Journey from "../components/Journey"
 const home = () => {
   return (
     <div className='bg-cover bg-center bg-fixed' style={{backgroundImage : `url(${valley})`}}>
-        <div className="bg-black/40">
+        <div className="bg-black/20">
             <Header />
             <Journey />
         </div>

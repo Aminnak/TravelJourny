@@ -16,7 +16,7 @@ const Data : Array<DataInterface> = [
         userName : 'aminnak',
         publishedDate : '15 years ago',
         journeyTitle : 'my beloving Germany Tour',
-        journeyLocation : '📍 Neuschwanstein Castle, Germany',
+        journeyLocation : 'Neuschwanstein Castle, Germany',
         journeyImage : '/sample.jpg',
         journeyDescription : `
                                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi dolore odio sapiente
@@ -40,7 +40,7 @@ const Data : Array<DataInterface> = [
         userName : 'Fiona',
         publishedDate : '2 years ago',
         journeyTitle : "Hallstatt: Austria's Hidden Gem",
-        journeyLocation : '📍 Hallstatt, Austria 🇦🇹',
+        journeyLocation : 'Hallstatt, Austria 🇦🇹',
         journeyImage : '/sample2.jpg',
         journeyDescription : `vero neque autem provident incidunt voluptas soluta porro error sunt ullam
                                     odit officia magni cupiditate ut! Magni enim unde aperiam error ducimus officiis tempori
