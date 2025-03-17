@@ -2,16 +2,21 @@ import { useNavigate } from "react-router-dom"
 import EarthSvg from "../iconCards/EarthCard"
 import SearchCard from "../iconCards/SearchCard"
 
+
 const Nav = () => {
     const Navigate = useNavigate()
 
-    const Navigator = (route : string) => {
-        Navigate(route)
+    const ListItemsNavigator = ( name : string) => {
+        if (name === 'Create') {
+            Navigate('/journey/create')
+        }
     }
+
+    const Navigator = (route : string) => Navigate(route)
     // creating the list items in navbar dinamically
-    const NavListItemTitles = ['Hotel','Flight','Train','Travel','Car Rental']
+    const NavListItemTitles = ['Hotel','Flight','Train','Travel','Create']
     const NavListItems = NavListItemTitles.map((title ,index)=> (
-        <li
+        <li onClick={() => ListItemsNavigator(title)}
             key={index}
             className="hover:text-neutral-400 hover:cursor-pointer hover:scale-97 duration-300 max-md:hidden"
         >
