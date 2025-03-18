@@ -1,9 +1,21 @@
+import { SubmitHandler , useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import EarthSvgCard from "../iconCards/EarthCard"
 import HomeCard from "../iconCards/HomeCard"
 import wayToHeaven  from "../assets/images/wayToHeaven.jpg"
 
+interface formInterface {
+    email : string;
+    password : string;
+}
+
 const Signup = () => {
+    const { register , handleSubmit , formState : { errors,isSubmitting }} = useForm<formInterface>();
+    const onFormSubmit : SubmitHandler<formInterface> =async (data) => {
+        await new Promise<void>((resolve) => setTimeout(resolve,1000));
+        console.log(data);
+    }
+
     const Location = useLocation()
     const Navigate = useNavigate()
     const PathnameStatus = Location.pathname === '/sign-up' ? true : false // if the route is at sign up then true if at login then flase
@@ -45,20 +57,31 @@ const Signup = () => {
                         <a onClick={() => Navigator('/home')} className="w-[25px] h-[25px] max-md:hidden"><HomeCard color='#022f2e'/></a>
                     </div>
                 </div>
-                <form action="#" className="flex flex-col mt-8 space-y-6">
+                <form className="flex flex-col mt-8 space-y-6" onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="flex flex-col space-y-1">
                         <label htmlFor="" className="font-semibold">Email</label>
-                        <input type="email" className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder="example@gmail.com"/>
+                        <input type="email" {...register("email" , {required : "Email is required"})} className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder="example@gmail.com"/>
+                        {errors.email && <div className="text-red-600">{errors.email?.message}</div>}
                     </div>
                     <div className="flex flex-col space-y-1">
                         <div className="flex justify-between">
                             <label htmlFor="" className="font-semibold">Password</label>
                             <h3 className="font-semibold">Forgot?</h3>
                         </div>
-                        <input type="password" className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder={'\u2022'.repeat(6)}/>
+                        <input type="password" {...register("password" , {
+                            required : "Password is required",
+                            ...(PathnameStatus && {
+                                    pattern : {
+                                        value : /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                                        message : 'Password must be at least 8 characters long and include at least one letter and one number'
+                                    }
+                                }
+                            )
+                        })} className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder={'\u2022'.repeat(6)}/>
+                        {errors.password && <div className="text-red-600">{errors.password.message}</div>}
                     </div>
                     <div className="flex flex-col justify-center text-center">
-                        <button type="submit" className="w-full py-3 px-4 font-bold rounded-md bg-teal-950 text-slate-100">{pageTexts.buttonText}</button>
+                        <button disabled={isSubmitting} type="submit" className="w-full py-3 px-4 font-bold rounded-md bg-teal-950 text-slate-100">{isSubmitting ? 'Loading' : pageTexts.buttonText}</button>
                         <p className="mt-4">{pageTexts.routerGuide.firstText}<span className="font-semibold text-teal-950 hover:cursor-pointer" onClick={() => Navigator(PathnameStatus ? '/login' : '/sign-up')}> {pageTexts.routerGuide.secondText}</span></p>
                     </div>
                 </form>
