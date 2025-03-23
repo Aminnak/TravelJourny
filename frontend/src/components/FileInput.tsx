@@ -1,18 +1,19 @@
 import { useRef, useState } from "react";
 import XIcon from "../iconCards/XIcon";
 import FullscreenCard from "../iconCards/FullscreenCard";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { mainFormInterface } from "../pages/CreatePost";
+
 interface FileInputProps {
     maxSize? : number;
-    register : UseFormRegister<mainFormInterface>;
-    errors : FieldErrors<mainFormInterface>
-    onFileSelected : (file : File) => void;
+    onFileSelected? : (file : File) => void;
+    onChange: (files: FileList | null) => void;
+    errors: string | undefined;
+    value: FileList | null;  // From the form state
+    ref: React.Ref<HTMLInputElement>;  // For native form elements
+    onRemove?: () => Promise<void>;
 }
-const FileInput : React.FC<FileInputProps> = ({maxSize = 3 * 1024 * 1024 , onFileSelected , register , errors}) => {
+const FileInput : React.FC<FileInputProps> = ({ onChange , errors , ref , onFileSelected }: FileInputProps) => {
     const [fileName , setFileName] = useState<string>('');
     const [fileSize , setFileSize] = useState<string>('');
-    const [error , setError] = useState<String>('');
     const [imgWidth , setImgWidth] = useState<null | number>(null);
     const [imgHeight , setImgHeight] = useState<null | number>(null);
     const [imgPreview , setImgPreview] = useState<null | string>(null);
@@ -26,47 +27,25 @@ const FileInput : React.FC<FileInputProps> = ({maxSize = 3 * 1024 * 1024 , onFil
     }
 
     const clearFile = () : void => {
+        onChange(null)
         setFileName('');
         setFileSize('');
-        setError('');
         setImgWidth(null);
         setImgHeight(null);
         setImgPreview(null);
     }
 
     const handleFileChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            onChange(files);
+          } else {
+            onChange(null);  // Handle case when no file is selected
+          }
         const file = event.target.files?.[0]
-        if(!file){
-            setFileName('');
-            setFileSize('');
-            setImgWidth(null);
-            setImgHeight(null);
-            setImgPreview(null);
-            setError('No file selected.');
-            return;
-        }
-        if (file.size > maxSize) {
-            setFileName('');
-            setFileSize('');
-            setImgWidth(null);
-            setImgHeight(null);
-            setImgPreview(null);
-            setError(`File size exceeds ${maxSize / (1024 * 1024)} MB. Please choose a smaller file`);
-            return;
-        }
-        if (!file.type.startsWith('image/')) {
-            setFileName('');
-            setFileSize('');
-            setImgWidth(null);
-            setImgHeight(null);
-            setImgPreview(null);
-            setError('Only image files are allowed.');
-            return;
-        }
-        setError('');
-        setFileName(file.name);
-        setFileSize(`${(file.size / (1024 * 1024)).toFixed(2)} MB`);
 
+        if(!file) return
+        
         const reader = new FileReader();
         reader.onload = (e) => {
             const image = new Image();
@@ -74,7 +53,9 @@ const FileInput : React.FC<FileInputProps> = ({maxSize = 3 * 1024 * 1024 , onFil
             image.onload = () => {
                 setImgHeight(image.height);
                 setImgWidth(image.width);
-                onFileSelected(file);
+                setFileName(file.name);
+                setFileSize(`${(file.size / (1024 * 1024)).toFixed(2)} MB`);
+                if(onFileSelected) onFileSelected(file);
             }
             setImgPreview(e.target?.result as string);
         }
@@ -109,14 +90,11 @@ const FileInput : React.FC<FileInputProps> = ({maxSize = 3 * 1024 * 1024 , onFil
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                 </div>
-                <input {...register("file" , {required : 'This field is required' , validate : (value) => {
-                    return value.size ? 'fuck u' : true // we will complete it later
-                }})} id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+                <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} accept="image/*" ref={ref}/>
             </label>
-            {errors.file && <p className="text-red-600">{errors.file.message}</p>}
             </> : imgPreview && (
                 <div className="relative">
-                  <img ref={userUploadedImgRef} src={imgPreview} alt="Preview" className="w-full md:h-full rounded-md" />
+                  <img ref={userUploadedImgRef} src={imgPreview} alt="Preview" className="w-full md:h-full h-auto rounded-md" />
                   <span onClick={clearFile} className="absolute right-1 top-1 w-[20px] h-[20px] hover:cursor-pointer pr-2 pt-2">
                     <XIcon />
                   </span>
@@ -125,12 +103,8 @@ const FileInput : React.FC<FileInputProps> = ({maxSize = 3 * 1024 * 1024 , onFil
               )
     }
       </div>
-      {error ? (
-        <div className="text-red-500 mt-2">{error}</div>
-      ) : (
-        <div className="text-gray-600 mt-2">
-          {fileName ? (
-            <div>
+      {!errors && fileName && (
+        <div className="mt-2">
               <span className="text-gray-200">{fileName}</span>
               <div className="text-gray-200">Size: {fileSize}</div>
               {imgWidth !== null && imgHeight !== null && (
@@ -138,11 +112,6 @@ const FileInput : React.FC<FileInputProps> = ({maxSize = 3 * 1024 * 1024 , onFil
                   Dimensions: {imgWidth}x{imgHeight}
                 </div>
               )}
-
-            </div>
-          ) : (
-            <span className="text-gray-200">No image chosen</span>
-          )}
         </div>
       )}
     </div>

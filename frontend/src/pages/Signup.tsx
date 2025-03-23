@@ -11,7 +11,7 @@ interface formInterface {
 
 const Signup = () => {
     const { register , handleSubmit , formState : { errors,isSubmitting }} = useForm<formInterface>();
-    const onFormSubmit : SubmitHandler<formInterface> =async (data) => {
+    const onFormSubmit : SubmitHandler<formInterface> = async (data) => {
         await new Promise<void>((resolve) => setTimeout(resolve,1000));
         console.log(data);
     }

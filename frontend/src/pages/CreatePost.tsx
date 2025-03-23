@@ -1,9 +1,9 @@
 import FileInput from '../components/FileInput'
 import JourneyExprience from '../assets/images/JourneyExprience.jpg'
-import {SubmitHandler , useForm } from 'react-hook-form'
+import {SubmitHandler , useForm ,Controller} from 'react-hook-form'
 
 export interface mainFormInterface {
-    file : File;
+    file: FileList | null;
     googleMapLink : string;
     title : string;
     location : string;
@@ -13,18 +13,35 @@ export interface mainFormInterface {
 
 const CreatePost = () => {
 
-    const { register , handleSubmit , setValue , formState : {errors , isSubmitting} } = useForm<mainFormInterface>()
+    const {control , register , handleSubmit , formState : {errors}} = useForm<mainFormInterface>()
 
-    const handleFileInput = (file : File) => setValue('file' , file)
+    const formSubmitHandler : SubmitHandler<mainFormInterface> = (data) => {if(data.file) console.log(data.file[0])}
 
-    const formSubmitHandler : SubmitHandler<mainFormInterface> = (data) => console.log(data)
   return (
     <form onSubmit={handleSubmit(formSubmitHandler)} className='w-full bg-fixed bg-cover bg-center' style={{backgroundImage : `url(${JourneyExprience})`}}>
+
         <div className="flex flex-col w-full p-6">
             <div className='rounded-md bg-black/70 min-h-screen'> {/* might cuase display issue in here*/}
                 <div className='flex max-md:flex-col-reverse w-full space-x-12 p-6'>
-                    <div className='w-4/9 max-md:w-full max-md:mt-8'>
-                        <FileInput onFileSelected={handleFileInput} register={register} errors={errors}/>
+                    <div className='flex flex-col w-4/9 max-md:w-full max-md:mt-8 text-center space-y-4'>
+                    <Controller
+                        name='file'
+                        control={control}
+                        rules={{required : 'Choose an image' , validate : (files) => {
+                            if(!files) return 'No file selected.'
+                            const file = files[0]
+                            if(file.size > 5 * 1024 * 1024) return 'File size exceeds 5Mb'
+                            if(!file.type.startsWith('image/')) return 'File type must be image'
+                            return true
+                        }}}
+                        render={({field}) => (
+                            <FileInput
+                                {...field}
+                                errors={errors.file?.message}
+                            />
+                        )}
+                    />
+                        <p className=''>{errors.file && <span className='text-red-600'>{errors.file.message}</span>}</p>
                     </div>
                     <div className='flex flex-col w-5/9 max-md:w-full space-y-4'>
                         <div className="flex flex-col space-y-2">
