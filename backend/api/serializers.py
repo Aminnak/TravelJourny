@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.core.validators import EmailValidator
 from django.contrib.auth import get_user_model
-
+from .models import TravelPostModel
 User = get_user_model()
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -16,4 +16,17 @@ class CustomUserSerializer(serializers.ModelSerializer):
                 'allow_blank' : False,
                 'validators' : [EmailValidator()]
             }
+        }
+
+
+class TravelPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TravelPostModel
+        fields = ['user' , 'title' , 'location' , 'google_map_link' , 'year' , 'picture' , 'description']
+        extra_kwargs = {
+            'picture' : {
+                'max_length' : 100,
+                'allow_empty_file' : False,
+                'required' : True
+            },
         }
