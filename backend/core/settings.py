@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from datetime import timedelta
 import os
 from pathlib import Path
 
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'api',
 ]
@@ -62,7 +65,20 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 900
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Token expires in 30 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh token lasts for 7 days
+    'ROTATE_REFRESH_TOKENS': True,  # Generate new refresh token on usage
+    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old refresh token after rotation
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Token should be passed as "Bearer <token>"
+}
 
 ROOT_URLCONF = 'core.urls'
 

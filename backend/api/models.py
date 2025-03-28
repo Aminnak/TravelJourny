@@ -45,9 +45,10 @@ def validate_year(value):
 
 def validate_image_size(image):
     # Check if image size is greater than 5MB
-    max_size = 5 * 1024 * 1024  # 5MB in bytes
+    mb = 5
+    max_size = mb * 1024 * 1024  # 5MB in bytes
     if image.size > max_size:
-        raise ValidationError("Image file size should not exceed 5MB.")
+        raise ValidationError("Image file size should not exceed {mb}MB.")
 
 class TravelPostModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE)
@@ -57,3 +58,5 @@ class TravelPostModel(models.Model):
     year = models.IntegerField(validators=[validate_year])
     picture = models.ImageField(validators=[validate_image_size] , upload_to='posts/images')
     description = models.TextField()
+
+    objects = models.Manager()

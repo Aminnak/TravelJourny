@@ -22,7 +22,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class TravelPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = TravelPostModel
-        fields = ['user' , 'title' , 'location' , 'google_map_link' , 'year' , 'picture' , 'description']
+        fields = ['title' , 'location' , 'google_map_link' , 'year' , 'picture' , 'description']
         extra_kwargs = {
             'picture' : {
                 'max_length' : 100,
@@ -30,3 +30,18 @@ class TravelPostSerializer(serializers.ModelSerializer):
                 'required' : True
             },
         }
+
+    def create(self, validated_data):
+        user = self.context['request'].user  # Get user from request
+        return TravelPostModel.objects.create(user=user, **validated_data)
+
+    def validate_picture(self , value):
+        size_limit = 2
+        if value.size > size_limit * 1024 * 1024:
+            raise serializers.ValidationError(f"The maximum file size allowed is {size_limit}Mb")
+
+        valid_file_extensions = ['.jpg', '.jpeg', '.png']
+        if not any(value.name.endswith(extention) for extention in valid_file_extensions):
+            raise serializers.ValidationError("Only JPG, JPEG, and PNG files are allowed.")
+
+        return value
