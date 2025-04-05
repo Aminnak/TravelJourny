@@ -27,8 +27,7 @@ SECRET_KEY = 'django-insecure-n^0rn_z@dg@1=0_l@@h1f8*+p9^m)5_a+xmd3j42cvo4)tz1^(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -41,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'api',
 ]
@@ -57,28 +55,27 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://example.com",
+CORS_ALLOW_CREDENTIALS = True 
+CORS_ALLOWED_ORIGINS = [  # Change this to match your frontend URL
+    "http://localhost:5173",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
-SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_AGE = 900
+
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Token expires in 30 minutes
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Refresh token lasts for 7 days
-    'ROTATE_REFRESH_TOKENS': True,  # Generate new refresh token on usage
-    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old refresh token after rotation
-    'AUTH_HEADER_TYPES': ('Bearer',),  # Token should be passed as "Bearer <token>"
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'api.auth.CookieJWTAuthentication',  # Use cookie-based JWT authentication
+#     ),
+# }
+
 
 ROOT_URLCONF = 'core.urls'
 

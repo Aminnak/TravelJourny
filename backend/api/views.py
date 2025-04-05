@@ -8,12 +8,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib.auth import authenticate
-from django.conf import settings
 from .models import CustomUser , TravelPostModel
 from .serializers import CustomUserSerializer , TravelPostSerializer
+from .auth import CookieJWTAuthentication
 
 class TravelPostPagination(PageNumberPagination):
     page_size = 10
+
+
 
 class CustomUserCreateView(CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -28,10 +30,30 @@ class CustomUserCreateView(CreateAPIView):
         access_token = str(refresh.access_token)
         refresh_token = str(refresh)
 
-        return Response({
+        response = Response({
             'refresh' : refresh_token ,
             'access' : access_token
         }, status=HTTP_201_CREATED)
+
+        response.set_cookie(key='access_token' ,
+            value=access_token ,
+            httponly=True ,
+            secure=False ,
+            path='/' ,
+            samesite='Lax' ,
+            max_age=60 * 60 * 24 * 7,
+        )
+        response.set_cookie(
+            key='refresh_token' ,
+            value=refresh_token ,
+            httponly=True ,
+            secure=False ,
+            path='/' ,
+            samesite='Lax' ,
+            max_age=60 * 60 * 24 * 7,
+        )
+
+        return response
 
 class CustomUserLoginView(CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -50,8 +72,8 @@ class CustomUserLoginView(CreateAPIView):
                 'message' : 'Logged in successfully'
             }, status=HTTP_200_OK)
 
-            response.set_cookie('access_token' , str(refresh.access_token),httponly=True ,secure=True , samesite='lax')
-            response.set_cookie('refresh_token' , str(refresh),httponly=True ,secure=True , samesite='lax')
+            response.set_cookie(key='access_token' , value=str(refresh.access_token),httponly=True ,secure=True , samesite='lax')
+            response.set_cookie(key='refresh_token' , value=str(refresh),httponly=True ,secure=True , samesite='lax')
 
             return response
 
@@ -76,8 +98,8 @@ class CustomTokenRefreshView(TokenRefreshView):
                 'message' : 'Completed successfully',
                 'access_token': str(new_tokens['access'])
             })
-            response.set_cookie('refresh_token' , str(new_tokens['refresh']) , httponly=True , secure=settings.SESSION_COOKIE_SECURE , samesite='lax' , path='/')
-            response.set_cookie('access_token' , str(new_tokens['access']),httponly=True ,secure=settings.SESSION_COOKIE_SECURE , samesite='lax' , path='/')
+            response.set_cookie('refresh_token' , str(new_tokens['refresh']) , httponly=True , secure=False , samesite='lax' , path='/')
+            response.set_cookie('access_token' , str(new_tokens['access']),httponly=True ,secure=False , samesite='lax' , path='/')
             return response
 
 
@@ -101,4 +123,6 @@ class TravelPostRetrieveView(RetrieveAPIView):
 class TravelPostListView(ListAPIView):
     queryset = TravelPostModel.objects.all()
     serializer_class = TravelPostSerializer
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = TravelPostPagination
