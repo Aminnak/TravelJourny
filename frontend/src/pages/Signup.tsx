@@ -1,5 +1,6 @@
 import { SubmitHandler , useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from 'axios';
 import EarthSvgCard from "../iconCards/EarthCard"
 import HomeCard from "../iconCards/HomeCard"
 import wayToHeaven  from "../assets/images/wayToHeaven.jpg"
@@ -11,9 +12,27 @@ interface formInterface {
 
 const Signup = () => {
     const { register , handleSubmit , formState : { errors,isSubmitting }} = useForm<formInterface>();
+    const baseApi = 'http://localhost:8000/api/'
     const onFormSubmit : SubmitHandler<formInterface> = async (data) => {
-        await new Promise<void>((resolve) => setTimeout(resolve,1000));
-        console.log(data);
+        try {
+            await axios.post(`${baseApi}user/create/`,
+                {
+                    ...data
+                },
+                {
+                    withCredentials : true
+                }
+            )
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    const getPosts = () => {
+        axios.get(`${baseApi}posts/`,{
+            withCredentials : true
+        })
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
     }
 
     const Location = useLocation()
@@ -33,16 +52,11 @@ const Signup = () => {
             secondText : PathnameStatus ? 'Log in' : 'Sign up'
         }
     }
-
-    const Navigator = (route : string) => {
-        Navigate(route)
-    }
-
   return (
 
     <>
     <div className="md:hidden flex justify-center py-4 px-5 text-white ">
-        <a  onClick={() => Navigator('/home')} className="w-[30px] h-[30px]"><HomeCard color='#022f2e'/></a>
+        <a  onClick={() => Navigate('/home')} className="w-[30px] h-[30px]"><HomeCard color='#022f2e'/></a>
     </div>
     <section className="flex space-x-3 h-screen "  style={Fonts.RobotoFont}>
         <div className="flex flex-col justify-center items-center lg:w-5/9 w-full rounded-lg ">
@@ -54,7 +68,7 @@ const Signup = () => {
                     <h2 className="text-xl font-bold">Get started</h2>
                     <div className="flex justify-between">
                         <h3 className="text-gray-500/60">{pageTexts.titleText}</h3>
-                        <a onClick={() => Navigator('/home')} className="w-[25px] h-[25px] max-md:hidden"><HomeCard color='#022f2e'/></a>
+                        <a onClick={() => Navigate('/home')} className="w-[25px] h-[25px] max-md:hidden"><HomeCard color='#022f2e'/></a>
                     </div>
                 </div>
                 <form className="flex flex-col mt-8 space-y-6" onSubmit={handleSubmit(onFormSubmit)}>
@@ -82,7 +96,8 @@ const Signup = () => {
                     </div>
                     <div className="flex flex-col justify-center text-center">
                         <button disabled={isSubmitting} type="submit" className="w-full py-3 px-4 font-bold rounded-md bg-teal-950 text-slate-100">{isSubmitting ? 'Loading' : pageTexts.buttonText}</button>
-                        <p className="mt-4">{pageTexts.routerGuide.firstText}<span className="font-semibold text-teal-950 hover:cursor-pointer" onClick={() => Navigator(PathnameStatus ? '/login' : '/sign-up')}> {pageTexts.routerGuide.secondText}</span></p>
+                        <p className="mt-4">{pageTexts.routerGuide.firstText}<span className="font-semibold text-teal-950 hover:cursor-pointer" onClick={() => Navigate(PathnameStatus ? '/login' : '/sign-up')}> {pageTexts.routerGuide.secondText}</span></p>
+
                     </div>
                 </form>
             </div>
@@ -92,6 +107,7 @@ const Signup = () => {
                 <h2 className="text-5xl italic text-teal-950 max-w-[350px]">Share your amazing travel stories with us</h2>
                 <div className="flex justify-center w-full text-5xl text-teal-950 max-w-[400px] pl-24">
                     <h2>we're glad to read them</h2>
+                    <button onClick={() => getPosts()} className="bg-red-300 rounded-md py-2 px-4 text-black">Get</button>
                 </div>
             </div>
         </div>
