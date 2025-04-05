@@ -42,6 +42,7 @@ class CustomUserCreateView(CreateAPIView):
             path='/' ,
             samesite='Lax' ,
             max_age=60 * 60 * 24 * 7,
+            # domain='localhost'
         )
         response.set_cookie(
             key='refresh_token' ,
@@ -51,6 +52,7 @@ class CustomUserCreateView(CreateAPIView):
             path='/' ,
             samesite='Lax' ,
             max_age=60 * 60 * 24 * 7,
+            # domain='localhost'
         )
 
         return response
