@@ -18,6 +18,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
             }
         }
 
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
 
 class TravelPostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,7 +43,7 @@ class TravelPostSerializer(serializers.ModelSerializer):
         return TravelPostModel.objects.create(user=user, **validated_data)
 
     def validate_picture(self , value):
-        size_limit = 2
+        size_limit = 5
         if value.size > size_limit * 1024 * 1024:
             raise serializers.ValidationError(f"The maximum file size allowed is {size_limit}Mb")
 

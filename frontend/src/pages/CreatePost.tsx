@@ -1,10 +1,11 @@
 import FileInput from '../components/FileInput'
 import JourneyExprience from '../assets/images/JourneyExprience.jpg'
 import {SubmitHandler , useForm ,Controller} from 'react-hook-form'
+import axios from 'axios';
 
 export interface mainFormInterface {
-    file: FileList | null;
-    googleMapLink : string;
+    file: FileList ;
+    google_map_link : string;
     title : string;
     location : string;
     description : string;
@@ -12,10 +13,32 @@ export interface mainFormInterface {
 }
 
 const CreatePost = () => {
-
+    // const baseApi = 'http://localhost:8000/api/'
     const {control , register , handleSubmit , formState : {errors}} = useForm<mainFormInterface>()
 
-    const formSubmitHandler : SubmitHandler<mainFormInterface> = (data) => {if(data.file) console.log(data.file[0])}
+    const formSubmitHandler : SubmitHandler<mainFormInterface> =async data => {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("location", data.location);
+        formData.append("google_map_link", data.google_map_link);
+        formData.append("year", String(data.year));
+        formData.append("description", data.description);
+
+        if (data.file && data.file.length > 0) {
+          formData.append("picture", data.file[0]);
+        }
+
+        try {
+          await axios.post("http://localhost:8000/api/post/create/", formData, {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+        } catch (error) {
+          console.error("Upload error:", error);
+        }
+    }
 
   return (
     <form onSubmit={handleSubmit(formSubmitHandler)} className='w-full bg-fixed bg-cover bg-center' style={{backgroundImage : `url(${JourneyExprience})`}}>
@@ -57,8 +80,8 @@ const CreatePost = () => {
                         <div className="flex w-full max-md:flex-col space-x-2">
                             <div className="flex flex-col w-6/10 max-md:w-full space-y-2">
                                 <label htmlFor='' className='text-white font-semibold'>Google map link</label>
-                                <input {...register('googleMapLink' , {required : 'This field is required.' , pattern : {value : /^(https?:\/\/)?(www\.)?maps\.google\.[a-zA-Z]{2,3}(\/maps)?(\?.*|\/place\/.*|\/dir\/.*)?$/ , message : 'Invalid link.'}})} className='px-4 py-2 rounded-md inset-shadow-sm inset-shadow-black bg-stone-400 text-black focus:outline-none placeholder:text-black/65' type="text" placeholder='https://maps.google.com'/>
-                                {errors.googleMapLink && <p className='text-red-600'>{errors.googleMapLink.message}</p>}
+                                <input {...register('google_map_link' , {required : 'This field is required.' , pattern : {value : /^(https?:\/\/)?(www\.)?maps\.google\.[a-zA-Z]{2,3}(\/maps)?(\?.*|\/place\/.*|\/dir\/.*)?$/ , message : 'Invalid link.'}})} className='px-4 py-2 rounded-md inset-shadow-sm inset-shadow-black bg-stone-400 text-black focus:outline-none placeholder:text-black/65' type="text" placeholder='https://maps.google.com'/>
+                                {errors.google_map_link && <p className='text-red-600'>{errors.google_map_link.message}</p>}
                             </div>
                             <div className="flex flex-col w-4/10 max-md:w-4/6 space-y-2">
                                 <label htmlFor='' className='text-white font-semibold'>Year</label>

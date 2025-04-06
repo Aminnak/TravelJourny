@@ -15,24 +15,11 @@ const Signup = () => {
     const baseApi = 'http://localhost:8000/api/'
     const onFormSubmit : SubmitHandler<formInterface> = async (data) => {
         try {
-            await axios.post(`${baseApi}user/create/`,
-                {
-                    ...data
-                },
-                {
-                    withCredentials : true
-                }
-            )
+            await axios.post(PathnameStatus ? `${baseApi}user/create/` : `${baseApi}user/login/`,{...data},{withCredentials : true})
+            Navigate('/home')
         } catch (err) {
             console.log(err)
         }
-    }
-    const getPosts = () => {
-        axios.get(`${baseApi}posts/`,{
-            withCredentials : true
-        })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
     }
 
     const Location = useLocation()
@@ -107,7 +94,6 @@ const Signup = () => {
                 <h2 className="text-5xl italic text-teal-950 max-w-[350px]">Share your amazing travel stories with us</h2>
                 <div className="flex justify-center w-full text-5xl text-teal-950 max-w-[400px] pl-24">
                     <h2>we're glad to read them</h2>
-                    <button onClick={() => getPosts()} className="bg-red-300 rounded-md py-2 px-4 text-black">Get</button>
                 </div>
             </div>
         </div>

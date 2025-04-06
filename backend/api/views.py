@@ -1,5 +1,5 @@
 from rest_framework.generics import CreateAPIView , RetrieveAPIView , ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED ,  HTTP_200_OK , HTTP_401_UNAUTHORIZED
@@ -7,7 +7,9 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.exceptions import TokenError
-from django.contrib.auth import authenticate
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from .models import CustomUser , TravelPostModel
 from .serializers import CustomUserSerializer , TravelPostSerializer
 from .auth import CookieJWTAuthentication
@@ -20,6 +22,8 @@ class TravelPostPagination(PageNumberPagination):
 class CustomUserCreateView(CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [AllowAny]
 
     def create(self , request , *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -42,7 +46,7 @@ class CustomUserCreateView(CreateAPIView):
             path='/' ,
             samesite='Lax' ,
             max_age=60 * 60 * 24 * 7,
-            # domain='localhost'
+            domain='localhost'
         )
         response.set_cookie(
             key='refresh_token' ,
@@ -52,36 +56,68 @@ class CustomUserCreateView(CreateAPIView):
             path='/' ,
             samesite='Lax' ,
             max_age=60 * 60 * 24 * 7,
-            # domain='localhost'
+            domain='localhost'
         )
 
         return response
 
-class CustomUserLoginView(CreateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+class CustomUserLoginView(TokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
 
-    def create(self , request , *args, **kwargs):
-        email = request.data.get('email')
-        password = request.data.get('password')
-        user = authenticate(email=email , password=password)
-        # print(request.data)
+
+    def post(self , request , *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+
+        access_token = data.get('access')
+        refresh_token = data.get('refresh')
+
+        response = Response(data, status=HTTP_200_OK)
+
+        response.set_cookie(
+            key='access_token',
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            max_age=60 * 10,
+        )
+        response.set_cookie(
+            key='refresh_token',
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            max_age=60 * 60 * 24 * 7,  # 7 days
+        )
+
+        return response
+        # print(res.data)
+        # email = request.data.get('email')
+        # password = request.data.get('password')
+        # serializer = self.get_serializer(data=request.data)
+        # user = CustomUser.objects.get(email=email , password=password) #authenticate(email=email , password=password)
+        # # print(request.data)
+        # # print(email , password)
         # print(user)
+        # # print()
 
-        if user is not None:
-            refresh = RefreshToken.for_user(user)
-            response = Response ({
-                'message' : 'Logged in successfully'
-            }, status=HTTP_200_OK)
+        # if serializer.is_valid():
+        #     refresh = RefreshToken.for_user(user)
+        #     response = Response ({
+        #         'message' : 'Logged in successfully'
+        #     }, status=HTTP_200_OK)
 
-            response.set_cookie(key='access_token' , value=str(refresh.access_token),httponly=True ,secure=True , samesite='lax')
-            response.set_cookie(key='refresh_token' , value=str(refresh),httponly=True ,secure=True , samesite='lax')
+        #     response.set_cookie(key='access_token' , value=str(refresh.access_token),httponly=True ,secure=True , samesite='lax')
+        #     response.set_cookie(key='refresh_token' , value=str(refresh),httponly=True ,secure=True , samesite='lax')
 
-            return response
+        #     return response
 
-        return Response({
-            'error' : 'Inavlid credentials'
-        }, status=HTTP_401_UNAUTHORIZED)
+        # return Response({
+        #     'erro' : 'Inavlid credentials'
+        # }, status=HTTP_401_UNAUTHORIZED)
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self , request , *args, **kwargs):
@@ -113,7 +149,7 @@ class CustomTokenRefreshView(TokenRefreshView):
 class TravlePostCreateView(CreateAPIView):
     queryset = TravelPostModel
     serializer_class = TravelPostSerializer
-    authentication_classes = [BasicAuthentication]
+    authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
 
