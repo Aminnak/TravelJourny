@@ -1,24 +1,59 @@
 // Pic , country , publisher , title , description , date posted , likes ,publisher profile
-import Data from '../data/Data'
+import { useEffect, useState } from 'react'
+
 import UserJourney from './UserJourneyTemplate'
+import axios from 'axios'
+
+interface postAPI {
+    id : number;
+    title : string;
+    description : string;
+    google_map_link : string;
+    username : string;
+    picture : string;
+    published_at : string;
+    location : string;
+    year : number;
+    user_profile : string;
+}
 
 const Journey = () => {
     const RobotoFont = {
         fontFamily: "Roboto, sans-serif",
     }
 
-    const UserPosts = Data.map(data => (
+    const [posts , setPosts] = useState<postAPI[]>([])
+    // const [loading , setLoading] = useState<boolean>(true)
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const res = await axios.get('http://localhost:8000/api/posts/', {withCredentials : true})
+                console.log(res)
+                setPosts(res.data.results)
+            } catch (err) {
+                console.log(err)
+            }finally {
+                // setLoading(false)
+            }
+        }
+        fetchPosts()
+    },[])
+
+
+    const UserPosts = posts.map(post => (
         <UserJourney
-            key={data.id}
-            id={data.id}
-            userProfile={data.userProfile}
-            userName={data.userName}
-            publishedDate={data.publishedDate}
-            journeyTitle={data.journeyTitle}
-            journeyLocation={data.journeyLocation}
-            journeyImage={data.journeyImage}
-            journeyDescription={data.journeyDescription}
-            googleMapsLink={data.googleMapsLink}
+            key={post.id}
+            id={post.id}
+            user_profile={post.user_profile}
+            username={post.username}
+            published_at={post.published_at}
+            title={post.title}
+            location={post.location}
+            picture={post.picture}
+            description={post.description}
+            google_map_link={post.google_map_link}
+            year={post.year}
 
         />
     ))
