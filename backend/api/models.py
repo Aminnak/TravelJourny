@@ -25,6 +25,8 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser , PermissionsMixin):
     email = models.EmailField(unique=True)
+    username = models.CharField(max_length=20 , unique=True)
+    profile = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -32,7 +34,7 @@ class CustomUser(AbstractBaseUser , PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return str(self.email)
@@ -59,5 +61,6 @@ class TravelPostModel(models.Model):
     year = models.IntegerField(validators=[validate_year])
     picture = models.ImageField(validators=[validate_image_size] , upload_to='posts/images')
     description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
