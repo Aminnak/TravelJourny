@@ -161,6 +161,4 @@ class TravelPostRetrieveView(RetrieveAPIView):
 class TravelPostListView(ListAPIView):
     queryset = TravelPostModel.objects.all()
     serializer_class = TravelPostSerializer
-    authentication_classes = [CookieJWTAuthentication]
-    permission_classes = [IsAuthenticated]
     pagination_class = TravelPostPagination
