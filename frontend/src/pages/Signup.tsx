@@ -1,6 +1,6 @@
 import { SubmitHandler , useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import EarthSvgCard from "../iconCards/EarthCard"
 import HomeCard from "../iconCards/HomeCard"
 import wayToHeaven  from "../assets/images/wayToHeaven.jpg"
@@ -8,17 +8,26 @@ import wayToHeaven  from "../assets/images/wayToHeaven.jpg"
 interface formInterface {
     email : string;
     password : string;
+    username? : string;
 }
 
 const Signup = () => {
-    const { register , handleSubmit , formState : { errors,isSubmitting }} = useForm<formInterface>();
+    const { register , handleSubmit , setError, formState : { errors,isSubmitting }} = useForm<formInterface>();
     const baseApi = 'http://localhost:8000/api/'
     const onFormSubmit : SubmitHandler<formInterface> = async (data) => {
         try {
             await axios.post(PathnameStatus ? `${baseApi}user/create/` : `${baseApi}user/login/`,{...data},{withCredentials : true})
             Navigate('/home')
-        } catch (err) {
-            console.log(err)
+        } catch (err : unknown) {
+            if (err instanceof AxiosError) {
+                const messages: string[] = [];
+                Object.keys(err.response?.data).forEach(item => {
+                    messages.push(err.response?.data[item][0]);
+                })
+                setError( "root", {message : `${messages}`})
+            } else {
+                setError('root', { message: 'An unknown error occurred' });
+            }
         }
     }
 
@@ -59,6 +68,12 @@ const Signup = () => {
                     </div>
                 </div>
                 <form className="flex flex-col mt-8 space-y-6" onSubmit={handleSubmit(onFormSubmit)}>
+                    {PathnameStatus &&
+                    <div>
+                        <label htmlFor="" className="font-semibold">Username</label>
+                        <input type="text" {...register("username" , {required : "username is required" , minLength : {value : 5 , message : 'Username has to be more than 5 characters'}})} className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder="example@gmail.com"/>
+                        {errors.username && <div className="text-red-600">{errors.username.message}</div>}
+                    </div>}
                     <div className="flex flex-col space-y-1">
                         <label htmlFor="" className="font-semibold">Email</label>
                         <input type="email" {...register("email" , {required : "Email is required"})} className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder="example@gmail.com"/>
@@ -81,6 +96,7 @@ const Signup = () => {
                         })} className="w-full py-2 px-4 rounded-md border border-gray-300 focus:outline-none focus:border-teal-800" placeholder={'\u2022'.repeat(6)}/>
                         {errors.password && <div className="text-red-600">{errors.password.message}</div>}
                     </div>
+                    {errors.root?.message && <p className="text-red-600">{errors.root.message}</p>}
                     <div className="flex flex-col justify-center text-center">
                         <button disabled={isSubmitting} type="submit" className="w-full py-3 px-4 font-bold rounded-md bg-teal-950 text-slate-100">{isSubmitting ? 'Loading' : pageTexts.buttonText}</button>
                         <p className="mt-4">{pageTexts.routerGuide.firstText}<span className="font-semibold text-teal-950 hover:cursor-pointer" onClick={() => Navigate(PathnameStatus ? '/login' : '/sign-up')}> {pageTexts.routerGuide.secondText}</span></p>
