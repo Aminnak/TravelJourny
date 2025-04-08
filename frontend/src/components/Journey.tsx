@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import UserJourney from './UserJourneyTemplate'
 import axios from 'axios'
 
-interface postAPI {
+export interface postAPI {
     id : number;
     title : string;
     description : string;
@@ -23,23 +23,30 @@ const Journey = () => {
     }
 
     const [posts , setPosts] = useState<postAPI[]>([])
+    const [nextUrl , setNextUrl] = useState<string>()
     // const [loading , setLoading] = useState<boolean>(true)
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const res = await axios.get('http://localhost:8000/api/posts/', {withCredentials : true})
-                console.log(res)
-                setPosts(res.data.results)
-            } catch (err) {
-                console.log(err)
-            }finally {
-                // setLoading(false)
-            }
+    const fetchPosts = async (url : string) => {
+        try {
+            const res = await axios.get(url, {withCredentials : true})
+            console.log(res)
+            setPosts(prev => [...prev , ...res.data.results])
+            setNextUrl(res.data.next)
+        } catch (err) {
+            console.log(err)
+        }finally {
+            // setLoading(false)
         }
-        fetchPosts()
+    }
+    useEffect(() => {
+        fetchPosts('http://localhost:8000/api/posts/')
     },[])
 
+    const loadMore = () => {
+        if(nextUrl){
+            fetchPosts(nextUrl)
+        }
+    }
 
     const UserPosts = posts.map(post => (
         <UserJourney
@@ -65,6 +72,9 @@ const Journey = () => {
                     What's our journey on this website?
                 </h2>
                 {UserPosts}
+                <div className='flex justify-center items-center py-6'>
+                    <button onClick={() => loadMore()} className='bg-black rounded-md text-white py-2 px-4'>More</button>
+                </div>
             </div>
         </section>
     </>

@@ -1,7 +1,10 @@
+import {SubmitHandler , useForm ,Controller} from 'react-hook-form'
+import { useNavigate } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import FileInput from '../components/FileInput'
 import JourneyExprience from '../assets/images/JourneyExprience.jpg'
-import {SubmitHandler , useForm ,Controller} from 'react-hook-form'
-import axios from 'axios';
 
 export interface mainFormInterface {
     file: FileList ;
@@ -13,9 +16,8 @@ export interface mainFormInterface {
 }
 
 const CreatePost = () => {
-    // const baseApi = 'http://localhost:8000/api/'
+    const navigate = useNavigate();
     const {control , register , handleSubmit , formState : {errors}} = useForm<mainFormInterface>()
-
     const formSubmitHandler : SubmitHandler<mainFormInterface> =async data => {
         const formData = new FormData();
         formData.append("title", data.title);
@@ -35,9 +37,27 @@ const CreatePost = () => {
               "Content-Type": "multipart/form-data",
             },
           });
-        } catch (error) {
-          console.error("Upload error:", error);
-        }
+        }  catch (err : unknown) {
+                    if (err instanceof AxiosError) {
+                        const messages: string[] = [];
+                        Object.keys(err.response?.data).forEach(item => {
+                            messages.push(err.response?.data[item]);
+                        })
+                        toast(
+                            <div className='flex space-x-2 items-center justify-between w-full pr-3'>
+                                <p>{messages[0].toLowerCase().startsWith('invalid') ? "You're not logged in." : messages[0]}</p>
+                                <button onClick={() => navigate('/login')} className='bg-red-600 rounded-md py-2 px-4 text-white'>
+                                    Login
+                                </button>
+                            </div>,
+                            {
+                                className: 'border border-purple-600/40',
+                            }
+                        )
+                    } else {
+                        toast.error('An unknown error occured')
+                    }
+                }
     }
 
   return (
@@ -80,7 +100,7 @@ const CreatePost = () => {
                         <div className="flex w-full max-md:flex-col space-x-2">
                             <div className="flex flex-col w-6/10 max-md:w-full space-y-2">
                                 <label htmlFor='' className='text-white font-semibold'>Google map link</label>
-                                <input {...register('google_map_link' , {required : 'This field is required.' , pattern : {value : /^(https?:\/\/)?(www\.)?maps\.google\.[a-zA-Z]{2,3}(\/maps)?(\?.*|\/place\/.*|\/dir\/.*)?$/ , message : 'Invalid link.'}})} className='px-4 py-2 rounded-md inset-shadow-sm inset-shadow-black bg-stone-400 text-black focus:outline-none placeholder:text-black/65' type="text" placeholder='https://maps.google.com'/>
+                                <input {...register('google_map_link' , {required : 'This field is required.' , pattern : {value : /https?:\/\/(www\.)?google\.com\/maps\/(?:place\/[^\/\s]+|search\/\?[^\/\s]*|@[-\d\.]+,[-\d\.]+,\d+z)/ , message : 'Invalid link.'}})} className='px-4 py-2 rounded-md inset-shadow-sm inset-shadow-black bg-stone-400 text-black focus:outline-none placeholder:text-black/65' type="text" placeholder='https://maps.google.com'/>
                                 {errors.google_map_link && <p className='text-red-600'>{errors.google_map_link.message}</p>}
                             </div>
                             <div className="flex flex-col w-4/10 max-md:w-4/6 space-y-2">

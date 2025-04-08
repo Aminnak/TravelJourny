@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
+import { ToastContainer } from "react-toastify";
+import Home from "./pages/home";
 import Signup from "./pages/Signup";
 import TravelJourney from "./pages/TravelJourney";
 import CreatePost from "./pages/CreatePost";
@@ -17,6 +18,7 @@ export default function App() {
                     <Route path="/journey/create" element={<CreatePost />} />
                 </Routes>
             </Router>
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />
         </div>
     );
 }

@@ -58,7 +58,7 @@ const UserJourney : React.FC<postAPI> = ({id,user_profile , username , published
                 <div className="flex justify-between max-md:items-center">
                     <a href={google_map_link} target="_blank" className="flex items-end"><span className="mr-1 w-[30px] h-[30px]"><GoogleMapLocationCard /></span><span className="text-gray-500/90 hover:text-gray-500/60 duration-300 hover:cursor-pointer underline text-sm">View on Google Maps</span></a>
                     <Link to={`/journey/${id}`}>
-                        <button className="px-7 py-1.5 rounded-full bg-black text-white max-md:w-full hover:cursor-pointer focus:scale-105 duration-300">More</button>
+                        <button className="px-7 py-1.5 rounded-md bg-black text-white max-md:w-full hover:cursor-pointer focus:scale-105 duration-300">Go</button>
                     </Link>
                 </div>
             </div>
