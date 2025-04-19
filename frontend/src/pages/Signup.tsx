@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from 'axios';
 import EarthSvgCard from "../iconCards/EarthCard"
 import HomeCard from "../iconCards/HomeCard"
-import wayToHeaven  from "../assets/images/wayToHeaven.jpg"
+import WayToHeaven  from "../assets/images/WayToHeaven.jpg"
 
 interface formInterface {
     email : string;
@@ -105,7 +105,7 @@ const Signup = () => {
                 </form>
             </div>
         </div>
-        <div className="w-4/9 justify-center  bg-cover bg-center hidden lg:flex" style={{backgroundImage : `url(${wayToHeaven})`}}>
+        <div className="w-4/9 justify-center  bg-cover bg-center hidden lg:flex" style={{backgroundImage : `url(${WayToHeaven})`}}>
             <div className="flex flex-col w-full py-8 px-12 space-y-6" style={Fonts.ShigaBrushFont}>
                 <h2 className="text-5xl italic text-teal-950 max-w-[350px]">Share your amazing travel stories with us</h2>
                 <div className="flex justify-center w-full text-5xl text-teal-950 max-w-[400px] pl-24">

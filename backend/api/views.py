@@ -15,7 +15,7 @@ from .serializers import CustomUserSerializer , TravelPostSerializer
 from .auth import CookieJWTAuthentication
 
 class TravelPostPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 1
 
 
 

@@ -1,0 +1,12 @@
+services:
+  # Backend Service
+  backend:
+    image: travel-backend-main
+    ports:
+      - "8000:8000"
+
+  # Frontend Service
+  frontend:
+    image: travel-frontend-main
+    ports:
+      - "5173:5173"
